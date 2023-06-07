@@ -1,3 +1,5 @@
+import com.google.gson.Gson;
+
 import java.io.*;
 import java.util.Arrays;
 
@@ -64,6 +66,52 @@ public class Basket {
                     .mapToInt(Integer::intValue)
                     .toArray();
 
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return basket;
+    }
+    public void saveBin(File file) {
+        try(ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file))) {
+            outputStream.writeObject(this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static Basket loadFromBinFile(File file) {
+        Basket basket = null;
+        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file))) {
+            basket = (Basket) objectInputStream.readObject();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return basket;
+    }
+    public void saveJSON(File file) {
+        try(PrintWriter writer = new PrintWriter(file)) {
+            Gson gson = new Gson();
+            String json = gson.toJson(this);
+            writer.print(json);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static Basket loadFromJSONFile(File file) {
+        Basket basket = null;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            StringBuilder builder = new StringBuilder();
+            String  line;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+            }
+            Gson gson = new Gson();
+            basket = gson.fromJson(builder.toString(),Basket.class);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
