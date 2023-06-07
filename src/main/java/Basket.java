@@ -8,6 +8,18 @@ public class Basket {
     protected int[] prices;
     protected int[] quantities;
 
+    public String[] getGoods() {
+        return goods;
+    }
+
+    public int[] getPrices() {
+        return prices;
+    }
+
+    public int[] getQuantities() {
+        return quantities;
+    }
+
     public Basket() {
     }
 
@@ -66,8 +78,6 @@ public class Basket {
                     .mapToInt(Integer::intValue)
                     .toArray();
 
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -84,8 +94,6 @@ public class Basket {
         Basket basket = null;
         try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file))) {
             basket = (Basket) objectInputStream.readObject();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
@@ -112,8 +120,6 @@ public class Basket {
             }
             Gson gson = new Gson();
             basket = gson.fromJson(builder.toString(),Basket.class);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
